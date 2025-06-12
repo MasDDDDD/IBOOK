@@ -1,14 +1,13 @@
-package com.huawei.ibooking.service.impl;
+package com.huawei.ibookstudy.service.impl;
 
-import com.huawei.ibooking.dao.StudyRoomDao;
-import com.huawei.ibooking.model.StudyRoomDO;
-import com.huawei.ibooking.service.StudyRoomService;
+import com.huawei.ibookstudy.dao.StudyRoomDao;
+import com.huawei.ibookstudy.model.StudyRoomDo;
+import com.huawei.ibookstudy.service.StudyRoomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,26 +15,27 @@ import java.util.Optional;
 
 @Service
 public class StudyRoomServiceImpl implements StudyRoomService {
-    @Autowired
     private StudyRoomDao studyRoomDao;
-
-    @Override
-    public List<StudyRoomDO> getStudyRooms() {
-        return studyRoomDao.getStudyRooms();
+    @Autowired
+    public StudyRoomServiceImpl(StudyRoomDao studyRoomDao) {
+        this.studyRoomDao = studyRoomDao;
     }
 
     @Override
-    public Optional<StudyRoomDO> getStudyRoomById(int id) {
-        StudyRoomDO room = studyRoomDao.getStudyRoomById(id);
+    public List<StudyRoomDo> getStudyRooms() { return studyRoomDao.getStudyRooms(); }
+
+    @Override
+    public Optional<StudyRoomDo> getStudyRoomById(int id) {
+        StudyRoomDo room = studyRoomDao.getStudyRoomById(id);
         return Optional.ofNullable(room);
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> changeTime(StudyRoomDO room) {
+    public ResponseEntity<Map<String, Object>> changeTime(StudyRoomDo room) {
         int id = room.getId(), startTime = room.getStartTime(), endTime = room.getEndTime();
         room = studyRoomDao.getStudyRoomById(id);
         Map<String, Object> map = new HashMap<>();
-        if(endTime <= startTime) {
+        if (endTime <= startTime) {
             map.put("message", "startTime should be smaller than endTime!");
             return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
@@ -46,11 +46,11 @@ public class StudyRoomServiceImpl implements StudyRoomService {
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> changeState(StudyRoomDO room) {
+    public ResponseEntity<Map<String, Object>> changeState(StudyRoomDo room) {
         int id = room.getId(), state = room.getState();
         room = studyRoomDao.getStudyRoomById(id);
         Map<String, Object> map = new HashMap<>();
-        if(state < 0 || state > 1) {
+        if (state < 0 || state > 1) {
             map.put("message", "state is illegal!");
             return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
@@ -60,20 +60,20 @@ public class StudyRoomServiceImpl implements StudyRoomService {
     }
 
     @Override
-    public ResponseEntity<Map<String, Object>> addStudyRoom(StudyRoomDO room) {
+    public ResponseEntity<Map<String, Object>> addStudyRoom(StudyRoomDo room) {
         Map<String, Object> map = new HashMap<>();
-        if(room == null || room.getBuildingNum() == null || room.getClassRoomNum() == null) {
+        if (room == null || room.getBuildingNum() == null || room.getClassRoomNum() == null) {
             map.put("message", "incomplete parameters!");
             return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
-        if(room.getStartTime() == -1) room.setStartTime(7);
-        if(room.getEndTime() == -1) room.setEndTime(22);
+        if (room.getStartTime() == -1) room.setStartTime(7);
+        if (room.getEndTime() == -1) room.setEndTime(22);
         boolean result = studyRoomDao.addStudyRoom(room);
-        if(result) {
+        if (result) {
             map.put("id", room.getId());
             return new ResponseEntity<>(map, HttpStatus.OK);
         }
-        return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
     }
 
     @Override

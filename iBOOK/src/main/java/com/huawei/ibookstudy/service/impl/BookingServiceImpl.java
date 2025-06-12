@@ -1,42 +1,44 @@
-package com.huawei.ibooking.service.impl;
+package com.huawei.ibookstudy.service.impl;
 
-import com.huawei.ibooking.constant.Const;
-import com.huawei.ibooking.dao.BookingDao;
-import com.huawei.ibooking.dao.SeatDao;
-import com.huawei.ibooking.dao.StudentDao;
-import com.huawei.ibooking.dao.StudyRoomDao;
-import com.huawei.ibooking.model.BookingDo;
-import com.huawei.ibooking.model.SeatDo;
-import com.huawei.ibooking.model.StudentDO;
-import com.huawei.ibooking.model.StudyRoomDO;
-import com.huawei.ibooking.service.BookingService;
+import com.huawei.ibookstudy.constant.Const;
+import com.huawei.ibookstudy.dao.BookingDao;
+import com.huawei.ibookstudy.dao.SeatDao;
+import com.huawei.ibookstudy.dao.StudentDao;
+import com.huawei.ibookstudy.dao.StudyRoomDao;
+import com.huawei.ibookstudy.model.BookingDo;
+import com.huawei.ibookstudy.model.SeatDo;
+import com.huawei.ibookstudy.model.StudentDo;
+import com.huawei.ibookstudy.model.StudyRoomDo;
+import com.huawei.ibookstudy.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import java.sql.Timestamp;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class BookingServiceImpl implements BookingService {
+    private final BookingDao bookingDao;
+    private final SeatDao seatDao;
+    private final StudyRoomDao studyRoomDao;
+    private final StudentDao studentDao;
+
     @Autowired
-    private BookingDao bookingDao;
-    @Autowired
-    private SeatDao seatDao;
-    @Autowired
-    private StudyRoomDao studyRoomDao;
-    @Autowired
-    private StudentDao studentDao;
+    public BookingServiceImpl(BookingDao bookingDao, SeatDao seatDao, StudyRoomDao studyRoomDao, StudentDao studentDao) {
+        this.bookingDao = bookingDao;
+        this.seatDao = seatDao;
+        this.studyRoomDao = studyRoomDao;
+        this.studentDao = studentDao;
+    }
 
     @Override
     public ResponseEntity<List<BookingDo>> getBookingListByStuNum(String stuNum) {
-        StudentDO stu = studentDao.getStudentById(stuNum);
+        StudentDo stu = studentDao.getStudentById(stuNum);
         if(stu == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -71,7 +73,7 @@ public class BookingServiceImpl implements BookingService {
 
     public void releaseSeat(){
         List<BookingDo> bookingList = bookingDao.getAvailableBookingList();
-        List<BookingDo> filtered = bookingList.stream().filter(bookingDo -> bookingDo.getState() == 1).collect(Collectors.toList());
+        List<BookingDo> filtered = bookingList.stream().filter(bookingDo -> bookingDo.getState() == 1).toList();
         for(BookingDo book : filtered) {
             bookingDao.updateBookingState(book.getId(), 4, "");
         }
@@ -150,6 +152,9 @@ public class BookingServiceImpl implements BookingService {
         if(booking == null || booking.getStartTime() == null) {
             map.put("message", "incomplete parameters!");
         } else if(booking.getSeatId() <= 0 || booking.getBookingPeriod() <= 0 || getHour(booking.getStartTime()) < calendar.get(Calendar.HOUR_OF_DAY)) {
+            System.out.println(booking.getSeatId());
+            System.out.println(booking.getBookingPeriod());
+            System.out.println(getHour(booking.getStartTime()));
             map.put("message", "invalid parameters!");
         } else if(booking.getBookingPeriod() > 4) {
             map.put("message", "booking period cannot be larger than 4h!");
@@ -171,10 +176,11 @@ public class BookingServiceImpl implements BookingService {
 
         Map<String, Object> map = checkValid(booking, seat);
         if(!map.isEmpty()) {
+            System.out.println("booking seat failed: " + map.get("message"));
             return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
 
-        StudyRoomDO studyRoom = studyRoomDao.getStudyRoomById(seat.getStudyRoomId());
+        StudyRoomDo studyRoom = studyRoomDao.getStudyRoomById(seat.getStudyRoomId());
         String stuNum = request.getAttribute(Const.SESSION_USERNAME).toString();
         Timestamp startTime = booking.getStartTime();
         int startHour = getHour(startTime), endHour = startHour + booking.getBookingPeriod();
@@ -189,26 +195,26 @@ public class BookingServiceImpl implements BookingService {
             if(bookingDo.getState() >= 2) return false;
             int start = getHour(bookingDo.getStartTime()), end = start + bookingDo.getBookingPeriod();
             return startHour >= start && startHour < end || endHour > start && endHour <= end;
-        }).collect(Collectors.toList());
-        if(filtered.size() > 0) {
+        }).toList();
+        if(!filtered.isEmpty()) {
             map.put("message", "booking time conflict exists!");
             return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
 
         // 判断是否现在是否占有其他座位，根据结果判断正常抢座还是占座
         List<BookingDo> bookingDos = bookingDao.getBookingListByStuNum(stuNum);
-        List<BookingDo> filtered2 = bookingDos.stream().filter(bookingDo -> bookingDo.getState() == 0 || bookingDo.getState() == -1).collect(Collectors.toList());
+        List<BookingDo> filtered2 = bookingDos.stream().filter(bookingDo -> bookingDo.getState() == 0 || bookingDo.getState() == -1).toList();
         // 有座位未签到不能再次预约
-        if(filtered2.size() > 0) {
+        if(!filtered2.isEmpty()) {
             map.put("message", "you've not signed in your current seat!");
             return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
 
         // 现在有座位，并且已签到，那么可以抢座
-        List<BookingDo> filtered3 = bookingDos.stream().filter(bookingDo -> bookingDo.getState() == 1).collect(Collectors.toList());
+        List<BookingDo> filtered3 = bookingDos.stream().filter(bookingDo -> bookingDo.getState() == 1).toList();
         boolean result;
         booking.setStuNum(stuNum);
-        if(filtered3.size() > 0) {
+        if(!filtered3.isEmpty()) {
             result = bookingDao.grabSeat(booking);
         } else {
             result = bookingDao.bookingSeat(booking);

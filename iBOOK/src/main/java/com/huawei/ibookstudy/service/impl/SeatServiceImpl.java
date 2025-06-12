@@ -1,10 +1,10 @@
-package com.huawei.ibooking.service.impl;
+package com.huawei.ibookstudy.service.impl;
 
-import com.huawei.ibooking.dao.SeatDao;
-import com.huawei.ibooking.dao.StudyRoomDao;
-import com.huawei.ibooking.model.SeatDo;
-import com.huawei.ibooking.model.StudyRoomDO;
-import com.huawei.ibooking.service.SeatService;
+import com.huawei.ibookstudy.dao.SeatDao;
+import com.huawei.ibookstudy.dao.StudyRoomDao;
+import com.huawei.ibookstudy.model.SeatDo;
+import com.huawei.ibookstudy.model.StudyRoomDo;
+import com.huawei.ibookstudy.service.SeatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,10 +17,14 @@ import java.util.Map;
 
 @Service
 public class SeatServiceImpl implements SeatService {
+    final SeatDao seatDao;
+    final StudyRoomDao studyRoomDao;
+
     @Autowired
-    private SeatDao seatDao;
-    @Autowired
-    private StudyRoomDao studyRoomDao;
+    public SeatServiceImpl(SeatDao seatDao, StudyRoomDao studyRoomDao) {
+        this.seatDao = seatDao;
+        this.studyRoomDao = studyRoomDao;
+    }
 
     @Override
     public List<SeatDo> getSeatsByRoomId(int roomId) {
@@ -49,7 +53,7 @@ public class SeatServiceImpl implements SeatService {
             return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
         }
         // 判断自习室是否存在
-        StudyRoomDO room = studyRoomDao.getStudyRoomById(seat.getStudyRoomId());
+        StudyRoomDo room = studyRoomDao.getStudyRoomById(seat.getStudyRoomId());
         if(ObjectUtils.isEmpty(room)) {
             map.put("message", "this studyRoom is not exist!");
             return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
@@ -67,4 +71,5 @@ public class SeatServiceImpl implements SeatService {
     public boolean deleteSeat(int id) {
         return seatDao.deleteSeat(id);
     }
+
 }

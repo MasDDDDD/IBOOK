@@ -1,6 +1,6 @@
-package com.huawei.ibooking.service;
+package com.huawei.ibookstudy.service;
 
-import com.huawei.ibooking.model.SeatDo;
+import com.huawei.ibookstudy.model.SeatDo;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
