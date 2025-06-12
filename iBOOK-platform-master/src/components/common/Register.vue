@@ -56,7 +56,7 @@
           dark
           @click="register"
         >
-          给我也整一个
+          注册
         </v-btn>
       </v-row>
       <v-snackbar v-model="snackbar" :color="snackbarColor" :timeout="snackbarTimeout">
