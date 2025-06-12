@@ -1,32 +1,29 @@
-package com.huawei.ibooking.controller;
+package com.huawei.ibookstudy.controller;
 
-import com.alibaba.druid.util.StringUtils;
-import com.huawei.ibooking.constant.Const;
-import com.huawei.ibooking.model.StudentDO;
-import com.huawei.ibooking.service.StudentService;
+import com.huawei.ibookstudy.model.StudentDo;
+import com.huawei.ibookstudy.service.StudentService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 @RequestMapping("/v1")
 @RestController
 public class StudentController {
-    @Autowired
     private StudentService studentService;
+    @Autowired
+    public void setStudentService(StudentService studentService) {
+        this.studentService = studentService;
+    }
 
     @GetMapping(value = "/profile/me")
-    public ResponseEntity<Optional<StudentDO>> myProfile(HttpServletRequest request, HttpServletResponse response) {
-        String stuNum = request.getAttribute(Const.SESSION_USERNAME).toString();
-        return new ResponseEntity<>(studentService.getStudentById(stuNum), HttpStatus.OK);
+    public ResponseEntity<Optional<StudentDo>> myProfile(HttpServletRequest request, HttpServletResponse response) {
+        String stuNum = request.getAttribute("SESSION_USERNAME").toString();
+        return ResponseEntity.ok(studentService.getStudentById(stuNum));
     }
 
     @PostMapping(value = "/profile/name")
