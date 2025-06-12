@@ -4,8 +4,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.huawei.ibooking.mapper.SeatMapper">
-    <resultMap id="seat" type="com.huawei.ibooking.model.SeatDo"/>
+<mapper namespace="com.huawei.ibookstudy.mapper.SeatMapper">
+    <resultMap id="seat" type="com.huawei.ibookstudy.model.SeatDo"/>
 
     <select id="getSeatsByRoomId" resultMap="seat" parameterType="java.lang.Integer">
         select id, studyRoomId, state
@@ -19,15 +19,15 @@
         where id = #{id}
     </select>
 
-    <insert id="addSeat" parameterType="com.huawei.ibooking.model.SeatDo" useGeneratedKeys="true" keyProperty="id">
+    <insert id="addSeat" parameterType="com.huawei.ibookstudy.model.SeatDo" useGeneratedKeys="true" keyProperty="id">
         insert into tbl_seat (studyRoomId)
         values (#{seat.studyRoomId})
     </insert>
 
-    <update id="updateSeat" parameterType="com.huawei.ibooking.model.SeatDo">
+    <update id="updateSeat"  parameterType="com.huawei.ibookstudy.model.SeatDo">
         update tbl_seat
-        set state = #{seat.state}
-        where id = #{seat.id}
+        set state = #{state}
+        where id = #{id}
     </update>
 
     <delete id="deleteSeat" parameterType="java.lang.Integer">

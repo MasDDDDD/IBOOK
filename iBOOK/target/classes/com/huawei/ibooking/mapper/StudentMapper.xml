@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huawei.ibookstudy.mapper.StudentMapper">
+    <resultMap id="stu" type="com.huawei.ibookstudy.model.StudentDo"/>
+
+    <select id="getStudents" resultMap="stu">
+        select id, stuNum, name, password
+        from tbl_student
+    </select>
+
+    <select id="getStudent" resultMap="stu" parameterType="java.lang.String">
+        select id, stuNum, name, password
+        from tbl_student
+        where stuNum = #{stuNum}
+    </select>
+
+    <insert id="addStudent" parameterType="com.huawei.ibookstudy.model.StudentDo">
+        insert into tbl_student (stuNum, name, password)
+        values (#{stu.stuNum}, #{stu.name}, #{stu.password})
+    </insert>
+
+    <update id="updateStudent" parameterType="com.huawei.ibookstudy.model.StudentDo">
+        update tbl_student
+        set name = #{stu.name}, password = #{stu.password}
+        where stuNum = #{stu.stuNum}
+    </update>
+
+    <delete id="deleteStudent" parameterType="java.lang.String">
+        delete
+        from tbl_student
+        where stuNum = #{stuNum}
+    </delete>
+</mapper>
