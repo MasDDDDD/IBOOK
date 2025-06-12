@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.huawei.ibooking.mapper.StudyRoomMapper">
+    <resultMap id="room" type="com.huawei.ibooking.model.StudyRoomDO"/>
+
+    <select id="getStudyRooms" resultMap="room">
+        select *
+        from tbl_study_room
+    </select>
+
+    <select id="getStudyRoom" resultMap="room" parameterType="java.lang.Integer">
+        select *
+        from tbl_study_room
+        where id = #{id}
+    </select>
+
+    <insert id="addStudyRoom" parameterType="com.huawei.ibooking.model.StudyRoomDO" useGeneratedKeys="true" keyProperty="id">
+        insert into tbl_study_room (buildingNum, classRoomNum, startTime, endTime)
+        values (#{room.buildingNum}, #{room.classRoomNum}, #{room.startTime}, #{room.endTime})
+    </insert>
+
+    <update id="updateStudyRoom" parameterType="com.huawei.ibooking.model.StudyRoomDO">
+        update tbl_study_room
+        set startTime = #{room.startTime}, endTime = #{room.endTime}, state = #{room.state}
+        where id = #{room.id}
+    </update>
+
+    <delete id="deleteStudyRoom" parameterType="java.lang.Integer">
+        delete
+        from tbl_study_room
+        where id = #{id}
+    </delete>
+</mapper>

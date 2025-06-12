@@ -3,7 +3,7 @@ module.exports = {
     port: 8009,
     proxy: {
       '/api': {
-        target: 'http://119.45.122.107:8009/v1',
+        target: 'http://localhost:8009/v1',
         changeOrigin: true,
         pathRewrite: {
           '^/api': '',
