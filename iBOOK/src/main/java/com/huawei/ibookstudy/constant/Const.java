@@ -1,4 +1,4 @@
-package com.huawei.ibooking.constant;
+package com.huawei.ibookstudy.constant;
 
 public class Const {
     public static final String SESSION_USERNAME = "SESSION_USERNAME";
