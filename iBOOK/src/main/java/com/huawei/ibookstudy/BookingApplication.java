@@ -1,13 +1,13 @@
-package com.huawei.ibooking;
+package com.huawei.ibookstudy;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class BookingApplication {
+public class IBookStudyApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(BookingApplication.class, args);
+        SpringApplication.run(IBookStudyApplication.class, args);
     }
 
 }
