@@ -1,30 +1,20 @@
-package com.huawei.ibooking.config;
+package com.huawei.ibookstudy.config;
 
-import com.alibaba.druid.util.StringUtils;
 import com.auth0.jwt.interfaces.Claim;
-import com.huawei.ibooking.constant.Const;
-import com.huawei.ibooking.dao.StudentDao;
-import com.huawei.ibooking.model.StudentDO;
-import com.huawei.ibooking.service.StudentService;
-import com.huawei.ibooking.util.JWTUtils;
+import com.huawei.ibookstudy.constant.Const;
+import com.huawei.ibookstudy.dao.StudentDao;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.juli.logging.Log;
 import org.apache.juli.logging.LogFactory;
-import org.mybatis.logging.Logger;
-import org.mybatis.logging.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import com.huawei.ibookstudy.util.JWTUtils;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import java.io.PrintWriter;
 import java.util.Map;
-
-import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class LoginInterceptor implements HandlerInterceptor {
@@ -41,25 +31,25 @@ public class LoginInterceptor implements HandlerInterceptor {
         response.setContentType("application/json;charset=utf-8");
 
         boolean isLegal = true;
-        if(token == null) {
+        if (token == null) {
             PrintWriter out = response.getWriter();
             out.write("{\"message\": \"token is null!\"}");
             out.flush();
             out.close();
             isLegal = false;
-        } else if(userData == null) {
+        }
+        else if (userData == null) {
             PrintWriter out = response.getWriter();
             out.write("{\"message\": \"token is illegal!\"}");
             out.flush();
             out.close();
             isLegal = false;
         }
-
-        if(!isLegal) return false;
+        if (!isLegal) return false;
 
         String stuNum = userData.get("stuNum").asString();
         int roleId = userData.get("roleId").asInt();
-        if(request.getServletPath().startsWith("/v1/admin") && roleId != 1) {
+        if (request.getServletPath().startsWith("/v1/admin") && roleId != 1) {
             log.debug("access" + request.getServletPath() + ", not logged in, return");
             response.setStatus(HttpStatus.FORBIDDEN.value());
             response.setContentType("application/json;charset=utf-8");
@@ -69,7 +59,6 @@ public class LoginInterceptor implements HandlerInterceptor {
             out.close();
             return false;
         }
-
         log.debug("stuNum: " + stuNum + ", roleId: " + roleId + ", logged in!");
         request.setAttribute(Const.SESSION_USERNAME, stuNum);
         return true;
@@ -77,9 +66,12 @@ public class LoginInterceptor implements HandlerInterceptor {
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+        // 可以在这里添加一些后处理逻辑
     }
 
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
+        // 可以在这里添加一些清理工作
     }
 }
+
