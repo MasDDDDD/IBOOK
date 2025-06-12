@@ -6,21 +6,20 @@ spring:
     view:
       prefix: /views/
       suffix: .html
-        
-  datasource:
-#    name: ibookingdb
-#    url: jdbc:h2:mem:ibookingdb
-#    username: sa
-#    password: syz913
-#    type: com.alibaba.druid.pool.DruidDataSource
-#    driver-class-name: org.h2.Driver
-    url: jdbc:mysql://localhost:3306/ibookingdb?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
-    username: root
-    password: 123456
-    driver-class-name: com.mysql.cj.jdbc.Driver
 
-#  jpa:
-#    database-platform: org.hibernate.dialect.MySQL5Dialect
+  datasource:
+    name: ibookingdb
+    url: jdbc:h2:mem:ibookingdb
+    username: ibookingtest
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: org.h2.Driver
+    druid:
+      validation-query: SELECT 1
+#    url: jdbc:mysql://localhost:3306/ibookingdb?useUnicode=true&characterEncoding=UTF-8&useSSL=false&serverTimezone=Asia/Shanghai
+#    username: root
+#    password: 123456
+#    driver-class-name: com.mysql.cj.jdbc.Driver
 
   sql:
     init:
@@ -29,9 +28,9 @@ spring:
       mode: EMBEDDED
 
 mybatis:
-  mapper-locations: classpath:com.huawei.ibooking.mapper/*.xml
-  type-aliases-package: com.huawei.ibooking.model
+  mapper-locations: classpath:com.huawei.ibookstudy.mapper/*.xml
+  type-aliases-package: com.huawei.ibookstudy.model
 
 logging:
   level:
-    com.huawei.ibooking: debug
+    com.huawei.ibookstudy: debug
