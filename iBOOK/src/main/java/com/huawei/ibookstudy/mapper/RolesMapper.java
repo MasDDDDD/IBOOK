@@ -1,4 +1,4 @@
-package com.huawei.ibooking.mapper;
+package com.huawei.ibookstudy.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;

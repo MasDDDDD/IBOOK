@@ -1,6 +1,6 @@
-package com.huawei.ibooking.mapper;
+package com.huawei.ibookstudy.mapper;
 
-import com.huawei.ibooking.model.StudyRoomDO;
+import com.huawei.ibookstudy.model.StudyRoomDo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -8,13 +8,13 @@ import java.util.List;
 
 @Mapper
 public interface StudyRoomMapper {
-    List<StudyRoomDO> getStudyRooms();
+    List<StudyRoomDo> getStudyRooms();
 
-    StudyRoomDO getStudyRoom(@Param("id") int id);
+    StudyRoomDo getStudyRoom(@Param("id") int id);
 
-    int addStudyRoom(@Param("room") StudyRoomDO room);
+    int addStudyRoom(@Param("room") StudyRoomDo room);
 
-    int updateStudyRoom(@Param("room") StudyRoomDO room);
+    int updateStudyRoom(@Param("room") StudyRoomDo room);
 
     int deleteStudyRoom(@Param("id") int id);
 }
