@@ -1,7 +1,7 @@
-package com.huawei.ibooking.controller.admin;
+package com.huawei.ibookstudy.controller.admin;
 
-import com.huawei.ibooking.model.StudentDO;
-import com.huawei.ibooking.service.StudentService;
+import com.huawei.ibookstudy.model.StudentDo;
+import com.huawei.ibookstudy.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,26 +13,27 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/v1/admin")
 public class UserManager {
-    @Autowired
     private StudentService studentService;
+    @Autowired
+    public UserManager(StudentService studentService) {
+        this.studentService = studentService;
+    }
 
     @GetMapping(value = "/student")
-    public ResponseEntity<List<StudentDO>> list() {
-        final List<StudentDO> students = studentService.getStudents();
-
+    public ResponseEntity<List<StudentDo>> list() {
+        final List<StudentDo> students = studentService.getStudents();
         return new ResponseEntity<>(students, HttpStatus.OK);
     }
 
     @GetMapping(value = "/student/{stuNum}")
-    public ResponseEntity<StudentDO> query(@PathVariable("stuNum") String stuNum) {
-        Optional<StudentDO> stu = studentService.getStudentById(stuNum);
-
-        return stu.map(studentDO -> new ResponseEntity<>(studentDO, HttpStatus.OK))
+    public ResponseEntity<StudentDo> query(@PathVariable("stuNum") String stuNum) {
+        Optional<StudentDo> stu = studentService.getStudentById(stuNum);
+        return stu.map(studentDo -> new ResponseEntity<>(studentDo, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.BAD_REQUEST));
     }
 
     @DeleteMapping(value = "/student")
-    public ResponseEntity<Void> delete(@RequestBody StudentDO student) {
+    public ResponseEntity<Void> delete(@RequestBody StudentDo student) {
         boolean result = studentService.deleteStudent(student.getStuNum());
         return new ResponseEntity<>(result ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
