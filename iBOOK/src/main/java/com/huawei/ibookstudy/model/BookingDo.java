@@ -1,12 +1,10 @@
-package com.huawei.ibooking.model;
+package com.huawei.ibookstudy.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Column;
 import java.sql.Timestamp;
 
 @NoArgsConstructor
@@ -15,9 +13,9 @@ import java.sql.Timestamp;
 public class BookingDo {
     private int id;
     private int seatId;
-    private int studyRoomId;
+    private int studyRoonId;
     private String buildingNum;
-    private String classRoomNum;
+    private String classRoonNum;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Timestamp startTime;

@@ -1,5 +1,4 @@
-package com.huawei.ibooking.model;
-
+package com.huawei.ibookstudy.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +7,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class StudentDO {
+public class StudentDo{
     private int id;
     private String stuNum;
     private String name;

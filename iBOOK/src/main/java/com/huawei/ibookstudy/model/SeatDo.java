@@ -1,12 +1,12 @@
-package com.huawei.ibooking.model;
+package com.huawei.ibookstudy.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @NoArgsConstructor
-@Getter
 @Setter
+@Getter
 public class SeatDo {
     private int id;
     private int studyRoomId = -1;

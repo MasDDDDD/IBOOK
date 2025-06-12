@@ -1,15 +1,13 @@
-package com.huawei.ibooking.model;
+package com.huawei.ibookstudy.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
-
 @NoArgsConstructor
 @Getter
 @Setter
-public class StudyRoomDO {
+public class StudyRoomDo {
     private int id;
     private int state;
     private String buildingNum;
