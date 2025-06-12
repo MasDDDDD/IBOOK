@@ -7,7 +7,7 @@
             v-model="name"
             :rules="[rules.required, rules.min, rules.max]"
             label="姓名"
-            hint="阁下怎么称呼？"
+            hint="您怎么称呼？"
           />
         </v-col>
       </v-row>
